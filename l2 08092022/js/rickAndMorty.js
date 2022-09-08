@@ -1,11 +1,30 @@
+let nextPage = null;
+let prevPage = null;
+
 window.addEventListener("load", () => {
-  fetch("https://rickandmortyapi.com/api/character")
+  loadAndDisplay("https://rickandmortyapi.com/api/character");
+  document.getElementById("nextBtn").addEventListener("click", () => {
+    if (nextPage) {
+      loadAndDisplay(nextPage);
+    }
+  });
+  document.getElementById("prevBtn").addEventListener("click", () => {
+    if (prevPage) {
+      loadAndDisplay(prevPage);
+    }
+  });
+});
+
+const loadAndDisplay = (url) => {
+  fetch(url)
     .then((response) => response.json()) //fetch convert the data from server from json to real array of objects
     .then((data) => {
       //real array of objects stored in data
       console.log("data", data);
       console.log("name", data.results[0].name);
       console.log("image", data.results[0].image);
+      nextPage = data.info.next;
+      prevPage = data.info.prev;
       let str = "";
       for (let characterItem of data.results) {
         str += `
@@ -19,4 +38,4 @@ window.addEventListener("load", () => {
       }
       document.getElementById("cardContainer").innerHTML = str;
     });
-});
+};
